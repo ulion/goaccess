@@ -82,10 +82,14 @@ window.GoAccess = window.GoAccess || {
 	},
 
 	setWebSocket: function (wsConn) {
-		var host = null;
-		host = wsConn.url ? wsConn.url : window.location.hostname ? window.location.hostname : "localhost";
-		var str = /^(wss?:\/\/)?[^\/]+:[0-9]{1,5}\//.test(host + "/") ? host : String(host + ':' + wsConn.port);
-		str = !/^wss?:\/\//i.test(str) ? (window.location.protocol === "https:" ? 'wss://' : 'ws://') + str : str;
+		var str = null;
+		if (wsConn.url) {
+			str = wsConn.url;
+		} else {
+			var host = window.location.hostname ? window.location.hostname : "localhost";
+			str = /^(wss?:\/\/)?[^\/]+:[0-9]{1,5}\//.test(host + "/") ? host : String(host + ':' + wsConn.port);
+			str = !/^wss?:\/\//i.test(str) ? (window.location.protocol === "https:" ? 'wss://' : 'ws://') + str : str;
+		}
 
 		var socket = new WebSocket(str);
 		socket.onopen = function (event) {
